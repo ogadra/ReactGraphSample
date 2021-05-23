@@ -3,32 +3,31 @@ import { ServerSideProps } from 'src/pages';
 import Graph from './graph';
 
 const Select: React.FC = (props: ServerSideProps) => {
-    const [wrapColumns, setWrapColumns] = useState({gridTemplateColumns: `repeat(5, 1fr)`});
+    const [wrapColumns, setWrapColumns] = useState({gridTemplateColumns: `repeat(5, 1fr)`}); // レスポンシブ用
+    const [prefData, setPrefData] = useState<number[]>([]);
     const wrap = {display: 'grid'}
 
     useEffect(() => {
+        // 画面幅が変更された場合、横に並べるグリッド項目数を変化させる
         function handleResize() {
             setWrapColumns({gridTemplateColumns: "repeat(" + String(Math.round(window.innerWidth / 140)) + ", 1fr)"});            
         }
         window.addEventListener('resize', handleResize);
-        handleResize();
+        handleResize(); // 初回読み込み時処理
         return () => window.removeEventListener('resize', handleResize);
     },[]);
 
-    const handleChange = async(e) => {
-        const response = await fetch('./api/resas', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(e.target.id),
-        })
-        const data = await response.json().then(data => data);
-        console.log(data);
+    const handleChange = (e) => {
+        if (e.target.checked){
+            // チェックされたら追加
+            setPrefData([...prefData, e.target.id]);
+        } else {
+            setPrefData(prefData.filter(id=> id != e.target.id)); // チェックを外されたら削除
+        }
     }
 
     return(
-        <div>
+        <div style={{marginTop: '250px'}}>
             <div style={Object.assign(wrap, wrapColumns)}>
                 {props.prefs.map(
                     (pref) => {
@@ -41,7 +40,7 @@ const Select: React.FC = (props: ServerSideProps) => {
                     }
                 )}
             </div>
-            <Graph/>
+            <Graph prefData={prefData}/>
         </div>
     )
 }

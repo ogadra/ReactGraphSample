@@ -1,7 +1,57 @@
 import Chart from 'react-google-charts';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-const Graph: React.FC = () => {
+interface Population{
+    year: number;
+    value: number;
+}
+interface Data{
+    label: string;
+    data: Population[];
+}
+
+const Graph: React.FC = (props: number[]) => {
+    const [data, setData] = useState<Data[]>(Array(47));
+    // const fetchData = async(id) => {
+    //     var responce = await fetch('./api/resas', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(id),
+    //     })
+    //     const prefData = await response.json().then(population => population);
+    //     //setData(...data, {id}:data.result.data[0]);
+    //     console.log(prefData);
+    // }
+
+    useEffect(() => {
+        function fetchData(){
+            props.prefData.map(async(pref) => {
+                console.log(pref);
+                const result = await fetch('./api/resas', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(pref),
+                })
+                const prefData = await result.json().then(population => population);
+
+                data[pref-1] = prefData.result.data[0]
+                setData(data);
+            })
+
+        //     const result = await fetch('./api/resas', {
+        //         method: 'POST',
+        //         headers: {'Content-Type': 'application/json'},
+        //         body: JSON.stringify(1),
+        //     })
+        //     const prefData = await result.json().then(population => population);
+        //     console.log(prefData);
+        }
+        fetchData();
+        console.log(data);
+    },[props])
+    
     return(
         <div>
             <Chart width={400} height={300} chartType="ColumnChart" loader={<div>Loading Chart</div>} data={[
