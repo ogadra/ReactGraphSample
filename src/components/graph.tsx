@@ -5,7 +5,7 @@ interface Props {
     prefData: Set<number>
 }
 
-let displayPrefName = new Set()
+let displayPrefName = new Set<number>()
 
 const Graph: React.FC<Props> = (props) => {
     const data: any[][] = [...Array(47)].map((_, i) => [String(i + 1)])
@@ -36,8 +36,9 @@ const Graph: React.FC<Props> = (props) => {
 
     //@ts-ignore
     const transpose = (a) => a[0].map((_, c) => a.map((r) => r[c])) // チャートに入れるために転置する関数
-    //@ts-ignore
-    const difference = (x, y) => new Set([...x].filter((e) => !y.has(e)))
+
+    const difference = (x: Set<number>, y: Set<number>) =>
+        new Set([...x].filter((e) => !y.has(e)))
 
     const [displayData, setDisplayData] = useState(year)
 
@@ -77,8 +78,7 @@ const Graph: React.FC<Props> = (props) => {
                     )
                 })
             }
-            //@ts-ignore
-            displayPrefName = new Set([...props.prefData])
+            displayPrefName = new Set<number>([...props.prefData])
             console.log(displayData, displayPrefName)
         }
         reloadData()

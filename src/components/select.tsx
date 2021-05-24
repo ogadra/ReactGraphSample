@@ -33,10 +33,9 @@ const Select: React.FC<Props> = (props) => {
             setPrefData((prefData) => new Set(prefData.add(prefid))) // チェックされたら追加
         } else {
             prefData.delete(prefid)
-            //@ts-ignore
             setPrefData(
                 (prefData) =>
-                    new Set(
+                    new Set<number>(
                         [...prefData].filter((id: number) => id !== prefid),
                     ),
             ) // チェックを外されたら削除
