@@ -8,6 +8,13 @@ interface Props {
 let displayPrefName = new Set<number>()
 
 const Graph: React.FC<Props> = (props) => {
+    const graphStyle: React.CSSProperties = {
+        width: '100%',
+        height: '70vw',
+        maxHeight: '600px',
+        position: 'relative',
+        display: 'inline-block',
+    }
     const data: any[][] = [...Array(47)].map((_, i) => [String(i + 1)])
 
     const year = [
@@ -45,8 +52,6 @@ const Graph: React.FC<Props> = (props) => {
     useEffect(() => {
         function reloadData() {
             const addedPref = difference(props.prefData, displayPrefName)
-            console.log(props.prefData, displayPrefName)
-            console.log(addedPref)
             if (addedPref) {
                 addedPref.forEach(async (pref: number) => {
                     if (data[pref - 1].length == 1) {
@@ -70,7 +75,6 @@ const Graph: React.FC<Props> = (props) => {
                 })
             }
             const removedPref = difference(displayPrefName, props.prefData)
-            console.log(removedPref)
             if (removedPref) {
                 removedPref.forEach((pref: number) => {
                     setDisplayData(
@@ -79,35 +83,46 @@ const Graph: React.FC<Props> = (props) => {
                 })
             }
             displayPrefName = new Set<number>([...props.prefData])
-            console.log(displayData, displayPrefName)
         }
         reloadData()
     }, [props])
 
     if (displayData.length > 1) {
         const tsDisplayData = transpose(displayData)
-        console.log(tsDisplayData)
         return (
-            <div>
+            <div style={graphStyle}>
                 <Chart
-                    width={400}
-                    height={300}
+                    width="100%"
+                    height="100%"
                     chartType="LineChart"
                     loader={<div>Loading Chart</div>}
                     data={tsDisplayData}
                     options={{
                         hAxis: {
-                            title: 'Year',
+                            title: '年',
                         },
                         vAxis: {
-                            title: 'Population',
+                            title: '人口',
                         },
                     }}
                 />
             </div>
         )
     } else {
-        return <div>データが選択されていません</div>
+        return (
+            <div style={graphStyle}>
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translateY(-50%) translateX(-50%)',
+                    }}
+                >
+                    データが選択されていません
+                </div>
+            </div>
+        )
     }
 }
 

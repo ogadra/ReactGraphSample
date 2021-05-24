@@ -27,9 +27,23 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 const Home: React.FC<ServerSideProps> = (result) => {
     return (
-        <div className={styles.container}>
-            <Select prefs={result.result} />
-        </div>
+        <>
+            <div
+                style={{
+                    textAlign: 'center',
+                    height: '5vh',
+                    lineHeight: '5vh',
+                    fontSize: 'min(20px, 3vh)',
+                    background: '#1a73e8',
+                    color: '#fafafa',
+                }}
+            >
+                都道府県別の総人口推移グラフ
+            </div>
+            <div className={styles.container}>
+                <Select prefs={result.result} />
+            </div>
+        </>
     )
 }
 

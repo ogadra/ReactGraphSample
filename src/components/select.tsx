@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { Prefs } from '../pages/index'
 import Graph from './graph'
+import styles from './Checkbox.module.css'
 
 interface Props {
     prefs: Prefs[]
 }
 
 const Select: React.FC<Props> = (props) => {
-    const [wrapColumns, setWrapColumns] = useState({
+    const [wrapColumns, setWrapColumns] = useState<React.CSSProperties>({
         gridTemplateColumns: `repeat(5, 1fr)`,
     }) // レスポンシブ用
     const [prefData, setPrefData] = useState(new Set<number>([]))
-    const wrap = { display: 'grid' }
+    const wrap: React.CSSProperties = {
+        display: 'grid',
+        width: '100%',
+        position: 'relative',
+        marginTop: '10px',
+    }
     useEffect(() => {
         // 画面幅が変更された場合、横に並べるグリッド項目数を変化させる
         function handleResize() {
             setWrapColumns({
                 gridTemplateColumns:
                     'repeat(' +
-                    String(Math.round(window.innerWidth / 140)) +
+                    String(Math.round(window.innerWidth / 120)) +
                     ', 1fr)',
             })
         }
@@ -43,13 +49,14 @@ const Select: React.FC<Props> = (props) => {
     }
 
     return (
-        <div style={{ marginTop: '250px' }}>
+        <div>
             <div style={Object.assign(wrap, wrapColumns)}>
                 {props.prefs.map((pref) => {
                     return (
                         <label
-                            style={{ margin: '5px 20px' }}
+                            style={{ margin: '5px 2px', userSelect: 'none' }}
                             key={pref.prefName}
+                            className={`${styles.checkbox} ${styles.inputCheckbox}`}
                         >
                             <input
                                 type="checkbox"
@@ -57,6 +64,7 @@ const Select: React.FC<Props> = (props) => {
                                 id={pref.prefCode}
                             />
                             {pref.prefName}
+                            <div className={styles.checkboxIndicator}></div>
                         </label>
                     )
                 })}
