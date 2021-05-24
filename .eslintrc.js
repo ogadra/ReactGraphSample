@@ -33,7 +33,7 @@ module.exports = {
             },
             typescript: {
                 config: 'tsconfig.json',
-                alwaysTryTypes: true,
+                alwaysTryTypes: false,
             },
         },
         react: {
