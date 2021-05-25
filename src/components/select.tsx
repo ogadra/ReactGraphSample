@@ -4,16 +4,20 @@ import Graph from './graph'
 import styles from './Checkbox.module.css'
 
 const Select: React.FC<Prefs> = (props) => {
+    const data: any[][] = [...Array(47)].map((_, i) => [String(i + 1)]) // 都道府県毎の人口データ
+
     const [wrapColumns, setWrapColumns] = useState<React.CSSProperties>({
         gridTemplateColumns: `repeat(5, 1fr)`,
     }) // レスポンシブ用
-    const [prefData, setPrefData] = useState(new Set<Pref>([]))
+
+    const [displayData, setDisplayData] = useState<Record<string, number[]>>()
     const wrap: React.CSSProperties = {
         display: 'grid',
         width: '100%',
         position: 'relative',
         marginTop: '10px',
     }
+
     useEffect(() => {
         // 画面幅が変更された場合、横に並べるグリッド項目数を変化させる
         function handleResize() {
@@ -29,26 +33,35 @@ const Select: React.FC<Prefs> = (props) => {
         return () => window.removeEventListener('resize', handleResize)
     }, [])
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const prefid = Number(e.target.id)
+    const addData = async (prefId: number) => {
+        if (data[prefId - 1].length == 1) {
+            const result = await fetch('./api/resas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(prefId),
+            })
+            const prefData = await result
+                .json()
+                .then((population) => population.result.data[0].data)
+
+            data[prefId - 1] = prefData.map((data: any) => data.value) // [data1, data2 ... dataN]の形にする
+        }
+        return data[prefId - 1]
+    }
+
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const prefId = Number(e.target.id)
         const prefName = String(e.target.value)
         if (e.target.checked) {
-            setPrefData(
-                (prefData) =>
-                    new Set(
-                        prefData.add({ prefCode: prefid, prefName: prefName }),
-                    ),
-            ) // チェックされたら追加
+            await addData(prefId).then((prefData) =>
+                setDisplayData({ ...displayData, [prefName]: prefData }),
+            )
+            // チェックされたら追加
         } else {
-            prefData.delete({ prefCode: prefid, prefName: prefName })
-            setPrefData(
-                (prefData) =>
-                    new Set<Pref>(
-                        [...prefData].filter(
-                            (pref: Pref) => pref.prefCode !== prefid,
-                        ),
-                    ),
-            ) // チェックを外されたら削除
+            const newSetDisplayData = { ...displayData }
+            delete newSetDisplayData[prefName]
+            setDisplayData(newSetDisplayData)
+            // 外されたら削除
         }
     }
 
@@ -74,7 +87,7 @@ const Select: React.FC<Prefs> = (props) => {
                     )
                 })}
             </div>
-            <Graph prefData={prefData} />
+            <Graph displayData={displayData} />
         </div>
     )
 }

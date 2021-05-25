@@ -35,6 +35,7 @@ const Home: React.FC<Prefs> = (props) => {
                     fontSize: 'min(20px, 3vh)',
                     background: '#1a73e8',
                     color: '#fafafa',
+                    boxShadow: '0px 1px 10px 2px rgba(0,0,0,0.5)',
                 }}
             >
                 都道府県別の総人口推移グラフ
