@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     const requestHeaders: HeadersInit = new Headers()
-    requestHeaders.set('X-API-KEY', process.env['RESAS_API'])
+    requestHeaders.set('X-API-KEY', process.env['RESAS_API']) //リクエストキーを環境変数から取得
 
     const response = await fetch(
         `https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=${req.body}`,

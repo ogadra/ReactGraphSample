@@ -1,14 +1,16 @@
 import { Chart } from 'react-google-charts'
 import React, { useEffect, useState } from 'react'
+import { Pref } from '../pages/index'
 
 interface Props {
-    prefData: Set<number>
+    prefData: Set<Pref>
 }
 
-let displayPrefName = new Set<number>()
+let displayPrefName = new Set<Pref>()
 
 const Graph: React.FC<Props> = (props) => {
     const graphStyle: React.CSSProperties = {
+        //グラフ表示領域の親要素に適用
         width: '100%',
         height: '70vw',
         maxHeight: '600px',
@@ -16,6 +18,7 @@ const Graph: React.FC<Props> = (props) => {
         display: 'inline-block',
     }
     const textStyle: React.CSSProperties = {
+        //グラフ代替のテキスト要素に適用
         position: 'absolute',
         top: '50%',
         transform: 'translateY(-50%)',
@@ -25,9 +28,9 @@ const Graph: React.FC<Props> = (props) => {
         fontSize: '20px',
     }
 
-    const data: any[][] = [...Array(47)].map((_, i) => [String(i + 1)])
+    const data: any[][] = [...Array(47)].map((_, i) => [String(i + 1)]) // 都道府県毎の人口データ
 
-    const year:any[] = [
+    const year: any[] = [
         [
             { type: 'date', label: 'year' },
             new Date(1960, 1),
@@ -54,50 +57,51 @@ const Graph: React.FC<Props> = (props) => {
     //@ts-ignore
     const transpose = (a) => a[0].map((_, c) => a.map((r) => r[c])) // チャートに入れるために転置する関数
 
-    const difference = (x: Set<number>, y: Set<number>) =>
+    const difference = (x: Set<Pref>, y: Set<Pref>) =>
         new Set([...x].filter((e) => !y.has(e)))
 
-    const [displayData, setDisplayData] = useState(year)
+    const [displayData, setDisplayData] = useState(year) // グラフにセットする配列
 
     useEffect(() => {
         function reloadData() {
-            const addedPref = difference(props.prefData, displayPrefName)
+            const addedPref = difference(props.prefData, displayPrefName) // 追加する県
             if (addedPref) {
-                addedPref.forEach(async (pref: number) => {
-                    if (data[pref - 1].length == 1) {
+                addedPref.forEach(async (pref: Pref) => {
+                    if (data[pref.prefCode - 1].length == 1) {
+                        // もしデータが無ければ新規取得する
                         const result = await fetch('./api/resas', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(pref),
+                            body: JSON.stringify(pref.prefCode),
                         })
                         const prefData = await result
                             .json()
                             .then(
                                 (population) => population.result.data[0].data,
                             )
-                        Array.prototype.push.apply(
-                            data[pref - 1],
+                        data[pref.prefCode - 1] = [pref.prefName].concat(
                             prefData.map((data: any) => data.value),
-                        )
+                        ) // [県名, data1, data2 ... dataN]の形にする
                     }
 
-                    setDisplayData([...displayData, data[pref - 1]])
+                    setDisplayData([...displayData, data[pref.prefCode - 1]])
                 })
             }
-            const removedPref = difference(displayPrefName, props.prefData)
+            const removedPref = difference(displayPrefName, props.prefData) // 削除する県
             if (removedPref) {
-                removedPref.forEach((pref: number) => {
+                removedPref.forEach((pref: Pref) => {
                     setDisplayData(
-                        displayData.filter((data) => data[0] != pref),
+                        displayData.filter((data) => data[0] != pref.prefName),
                     )
                 })
             }
-            displayPrefName = new Set<number>([...props.prefData])
+            displayPrefName = new Set<Pref>([...props.prefData])
         }
         reloadData()
     }, [props])
 
     if (displayData.length > 1) {
+        // 県が選択されている場合
         const tsDisplayData = transpose(displayData)
         return (
             <div style={graphStyle}>
@@ -119,6 +123,7 @@ const Graph: React.FC<Props> = (props) => {
             </div>
         )
     } else {
+        // 県が選択されていない場合
         return (
             <div style={graphStyle}>
                 <div style={textStyle}>データが選択されていません</div>

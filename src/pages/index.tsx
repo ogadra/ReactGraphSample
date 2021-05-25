@@ -2,14 +2,13 @@ import { GetServerSideProps } from 'next'
 import styles from '../styles/Home.module.css'
 import Select from '../components/select'
 
-export interface Prefs {
-    prefCode: string
+export interface Pref {
+    prefCode: number
     prefName: string
-}
+} //RESAS-APIで取得する都道府県情報
 
-interface ServerSideProps {
-    message: null
-    result: Prefs[]
+export interface Prefs {
+    result: Pref[]
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -25,7 +24,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     }
 }
 
-const Home: React.FC<ServerSideProps> = (result) => {
+const Home: React.FC<Prefs> = (props) => {
     return (
         <>
             <div
@@ -41,7 +40,7 @@ const Home: React.FC<ServerSideProps> = (result) => {
                 都道府県別の総人口推移グラフ
             </div>
             <div className={styles.container}>
-                <Select prefs={result.result} />
+                <Select result={props.result} />
             </div>
         </>
     )
