@@ -55,7 +55,7 @@ const Select: React.FC<Prefs> = (props) => {
     return (
         <div>
             <div style={Object.assign(wrap, wrapColumns)}>
-                {props.result.map((pref:Pref) => {
+                {props.result.map((pref: Pref) => {
                     return (
                         <label
                             style={{ margin: '5px 2px', userSelect: 'none' }}

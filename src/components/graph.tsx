@@ -118,6 +118,11 @@ const Graph: React.FC<Props> = (props) => {
                         vAxis: {
                             title: '人口',
                         },
+                        animation: {
+                            startup: true,
+                            easing: 'in',
+                            duration: 100,
+                        },
                     }}
                 />
             </div>
