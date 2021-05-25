@@ -15,29 +15,39 @@ const Graph: React.FC<Props> = (props) => {
         position: 'relative',
         display: 'inline-block',
     }
+    const textStyle: React.CSSProperties = {
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        width: '100%',
+        textAlign: 'center',
+        color: 'gray',
+        fontSize: '20px',
+    }
+
     const data: any[][] = [...Array(47)].map((_, i) => [String(i + 1)])
 
-    const year = [
+    const year:any[] = [
         [
-            'year',
-            1960,
-            1965,
-            1970,
-            1975,
-            1980,
-            1985,
-            1990,
-            1995,
-            2000,
-            2005,
-            2010,
-            2015,
-            2020,
-            2025,
-            2030,
-            2035,
-            2040,
-            2045,
+            { type: 'date', label: 'year' },
+            new Date(1960, 1),
+            new Date(1965, 1),
+            new Date(1970, 1),
+            new Date(1975, 1),
+            new Date(1980, 1),
+            new Date(1985, 1),
+            new Date(1990, 1),
+            new Date(1995, 1),
+            new Date(2000, 1),
+            new Date(2005, 1),
+            new Date(2010, 1),
+            new Date(2015, 1),
+            new Date(2020, 1),
+            new Date(2025, 1),
+            new Date(2030, 1),
+            new Date(2035, 1),
+            new Date(2040, 1),
+            new Date(2045, 1),
         ],
     ]
 
@@ -95,7 +105,7 @@ const Graph: React.FC<Props> = (props) => {
                     width="100%"
                     height="100%"
                     chartType="LineChart"
-                    loader={<div>Loading Chart</div>}
+                    loader={<div style={textStyle}>Loading Chart</div>}
                     data={tsDisplayData}
                     options={{
                         hAxis: {
@@ -111,16 +121,7 @@ const Graph: React.FC<Props> = (props) => {
     } else {
         return (
             <div style={graphStyle}>
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translateY(-50%) translateX(-50%)',
-                    }}
-                >
-                    データが選択されていません
-                </div>
+                <div style={textStyle}>データが選択されていません</div>
             </div>
         )
     }
