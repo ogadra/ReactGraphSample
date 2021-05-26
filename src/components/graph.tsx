@@ -9,8 +9,8 @@ const Graph: React.FC<Props> = (props) => {
     const graphStyle: React.CSSProperties = {
         //グラフ表示領域の親要素に適用
         width: '100%',
-        height: '70vw',
-        maxHeight: '600px',
+        height: '80vw',
+        maxHeight: '700px',
         position: 'relative',
         display: 'inline-block',
     }
@@ -66,8 +66,8 @@ const Graph: React.FC<Props> = (props) => {
         return (
             <div style={graphStyle} data-testid="graphArea">
                 <Chart
-                    width="100%"
-                    height="100%"
+                    height={'100%'}
+                    width={'100%'}
                     chartType="LineChart"
                     loader={<div style={textStyle}>ロード中</div>}
                     data={tsDisplayData}
@@ -83,6 +83,10 @@ const Graph: React.FC<Props> = (props) => {
                             easing: 'in',
                             duration: 100,
                         },
+                        chartArea:{
+                            width:'50%',
+                            
+                        }
                     }}
                 />
             </div>
