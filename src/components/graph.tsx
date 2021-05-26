@@ -64,12 +64,12 @@ const Graph: React.FC<Props> = (props) => {
         const tsDisplayData = transpose(displayDataWithAxis)
 
         return (
-            <div style={graphStyle}>
+            <div style={graphStyle} data-testid="graphArea">
                 <Chart
                     width="100%"
                     height="100%"
                     chartType="LineChart"
-                    loader={<div style={textStyle}>Loading Chart</div>}
+                    loader={<div style={textStyle}>ロード中</div>}
                     data={tsDisplayData}
                     options={{
                         hAxis: {

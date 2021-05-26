@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Pref, Prefs } from '../pages/index'
 import Graph from './graph'
 import styles from './Checkbox.module.css'
+import addData from './addData'
 
 const Select: React.FC<Prefs> = (props) => {
-    const data: any[][] = [...Array(47)].map((_, i) => [String(i + 1)]) // 都道府県毎の人口データ
-
     const [wrapColumns, setWrapColumns] = useState<React.CSSProperties>({
         gridTemplateColumns: `repeat(5, 1fr)`,
     }) // レスポンシブ用
@@ -32,22 +31,6 @@ const Select: React.FC<Prefs> = (props) => {
         handleResize() // 初回読み込み時処理
         return () => window.removeEventListener('resize', handleResize)
     }, [])
-
-    const addData = async (prefId: number) => {
-        if (data[prefId - 1].length == 1) {
-            const result = await fetch('./api/resas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(prefId),
-            })
-            const prefData = await result
-                .json()
-                .then((population) => population.result.data[0].data)
-
-            data[prefId - 1] = prefData.map((data: any) => data.value) // [data1, data2 ... dataN]の形にする
-        }
-        return data[prefId - 1]
-    }
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const prefId = Number(e.target.id)

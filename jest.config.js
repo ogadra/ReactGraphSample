@@ -1,6 +1,6 @@
 module.exports = {
     preset: 'ts-jest',
-    testEnvironment: 'node',
+    testEnvironment: 'jsdom',
     roots: ['<rootDir>/src'],
     testMatch: [
       '**/__tests__/**/*.+(ts|tsx|js)',
@@ -11,6 +11,7 @@ module.exports = {
     },
     moduleNameMapper: {
       '^src/(.*)$': '<rootDir>/src/$1',
+      '\\.(css|scss)$': '<rootDir>/node_modules/jest-css-modules'
     },
     testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
