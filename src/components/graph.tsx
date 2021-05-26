@@ -83,10 +83,9 @@ const Graph: React.FC<Props> = (props) => {
                             easing: 'in',
                             duration: 100,
                         },
-                        chartArea:{
-                            width:'50%',
-                            
-                        }
+                        chartArea: {
+                            width: '50%',
+                        },
                     }}
                 />
             </div>

@@ -36,9 +36,11 @@ const Select: React.FC<Prefs> = (props) => {
         const prefId = Number(e.target.id)
         const prefName = String(e.target.value)
         if (e.target.checked) {
-            await addData(prefId).then((prefData) =>
-                setDisplayData({ ...displayData, [prefName]: prefData }),
-            )
+            await addData(prefId).then((prefData) => {
+                if (prefData.length > 1) {
+                    setDisplayData({ ...displayData, [prefName]: prefData })
+                }
+            })
             // チェックされたら追加
         } else {
             const newSetDisplayData = { ...displayData }
