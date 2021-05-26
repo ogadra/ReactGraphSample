@@ -6,7 +6,7 @@
 
 ```bash
 git clone git@github.com:ogadra/ReactGraphSample.git
-cd ReacgGraphSample
+cd ReactGraphSample
 npm init
 npm run dev
 ```
