@@ -25,9 +25,8 @@ const Graph: React.FC<Props> = (props) => {
         fontSize: '20px',
     }
 
-    //@ts-ignore
-    const transpose = (a) => a[0].map((_, c) => a.map((r) => r[c])) // チャートに入れるために転置する関数
-
+    const transpose = (a: any[]) =>
+        a[0].map((_: any, c: string | number) => a.map((r) => r[c])) // チャートに入れるために転置する関数
     const displayData: Record<string, number[]> | undefined = props.displayData
 
     if (displayData != null && Object.keys(displayData).length >= 1) {
