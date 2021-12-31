@@ -49,6 +49,8 @@ module.exports = {
                 },
             },
         ],
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
         'react/prop-types': ['off'],
         'react/react-in-jsx-scope': 'off',
         'react/jsx-filename-extension': [
